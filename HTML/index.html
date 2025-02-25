@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Animated Weather Card</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="weather-card">
+    <div class="background"></div>
+    <div class="weather-info">
+      <h1 id="temperature">21°C</h1>
+      <p id="weather-type">Sunny</p>
+      <p id="current-day">Today</p>
+    </div>
+    <div class="animations">
+      <!-- Weather-specific animations -->
+      <canvas id="rain"></canvas>
+      <div id="snow"></div>
+      <div id="cloud"></div>
+      <div id="sun"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
