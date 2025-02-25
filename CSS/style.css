@@ -47,3 +47,41 @@ body {
   width: 50px;
   height: auto;
 }
+/* Snowflake Animation */
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Prevent scrollbars */
+  background: #001f3f; /* Dark blue background */
+}
+
+.snowflake {
+  position: absolute;
+  top: -10px; /* Start slightly above the screen */
+  width: 10px;
+  height: 10px;
+  background-color: white;
+  border-radius: 50%; /* Make it circular */
+  opacity: 0.8; /* Slight opacity for a soft effect */
+  animation: fall linear infinite, sway ease-in-out infinite;
+}
+
+/* Falling animation */
+@keyframes fall {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(100vh); /* Move snowflakes from top to bottom */
+  }
+}
+
+/* Swaying animation for side-to-side motion */
+@keyframes sway {
+  from {
+    transform: translateX(0px);
+  }
+  to {
+    transform: translateX(50px); /* Sway slightly to the side */
+  }
+}
