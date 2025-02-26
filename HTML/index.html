@@ -1,28 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Animated Weather Card</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Weather Cards</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-  <div class="weather-card">
-    <div class="background"></div>
-    <div class="weather-info">
-      <h1 id="temperature">21°C</h1>
-      <p id="weather-type">Sunny</p>
-      <p id="current-day">Today</p>
-    </div>
-    <div class="animations">
-      <!-- Weather-specific animations -->
-      <canvas id="rain"></canvas>
-      <div id="snow"></div>
-      <div id="cloud"></div>
-      <div id="sun"></div>
-    </div>
-  </div>
+    <div class="app-container">
+        <h1 class="title">Interactive Weather Cards</h1>
+        
+        <div class="weather-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="warm">Warm</button>
+            <button class="filter-btn" data-filter="cold">Cold</button>
+        </div>
 
-  <script src="script.js"></script>
+        <div class="weather-container">
+            <!-- Windy Card -->
+            <div class="weather-card windy" data-temp="18" data-type="warm">
+                <div class="card-header">
+                    <h2>Windy</h2>
+                    <span class="location">Chicago</span>
+                </div>
+                <div class="card-content">
+                    <div class="icon">
+                        <i class="fas fa-wind"></i>
+                    </div>
+                    <p class="temp">18°<span class="unit">C</span></p>
+                    <div class="wind-animation"></div>
+                </div>
+                <div class="card-footer">
+                    <p class="details">Wind: <span class="wind-speed">25</span> km/h</p>
+                    <p class="humidity">Humidity: 45%</p>
+                </div>
+            </div>
+
+            <!-- Rainy Card -->
+            <div class="weather-card rainy" data-temp="14" data-type="cold">
+                <div class="card-header">
+                    <h2>Rainy</h2>
+                    <span class="location">Seattle</span>
+                </div>
+                <div class="card-content">
+                    <div class="icon">
+                        <i class="fas fa-cloud-rain"></i>
+                    </div>
+                    <p class="temp">14°<span class="unit">C</span></p>
+                    <div class="rain-animation"></div>
+                </div>
+                <div class="card-footer">
+                    <p class="details">Precipitation: 80%</p>
+                    <p class="humidity">Humidity: 85%</p>
+                </div>
+            </div>
+
+            <!-- Sunny Card -->
+            <div class="weather-card sunny" data-temp="28" data-type="warm">
+                <div class="card-header">
+                    <h2>Sunny</h2>
+                    <span class="location">Miami</span>
+                </div>
+                <div class="card-content">
+                    <div class="icon">
+                        <i class="fas fa-sun"></i>
+                    </div>
+                    <p class="temp">28°<span class="unit">C</span></p>
+                    <div class="sun-animation"></div>
+                </div>
+                <div class="card-footer">
+                    <p class="details">UV Index: High</p>
+                    <p class="humidity">Humidity: 30%</p>
+                </div>
+            </div>
+
+            <!-- Snowy Card -->
+            <div class="weather-card snowy" data-temp="-5" data-type="cold">
+                <div class="card-header">
+                    <h2>Snowy</h2>
+                    <span class="location">Montreal</span>
+                </div>
+                <div class="card-content">
+                    <div class="icon">
+                        <i class="fas fa-snowflake"></i>
+                    </div>
+                    <p class="temp">-5°<span class="unit">C</span></p>
+                    <div class="snow-animation"></div>
+                </div>
+                <div class="card-footer">
+                    <p class="details">Snowfall: 6 cm</p>
+                    <p class="humidity">Humidity: 70%</p>
+                </div>
+            </div>
+            
+            <!-- Cloudy Card -->
+            <div class="weather-card cloudy" data-temp="22" data-type="warm">
+                <div class="card-header">
+                    <h2>Cloudy</h2>
+                    <span class="location">London</span>
+                </div>
+                <div class="card-content">
+                    <div class="icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <p class="temp">22°<span class="unit">C</span></p>
+                    <div class="cloud-animation"></div>
+                </div>
+                <div class="card-footer">
+                    <p class="details">Cloud cover: 75%</p>
+                    <p class="humidity">Humidity: 60%</p>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="controls">
+            <button id="toggle-animations" class="control-btn">
+                <i class="fas fa-play"></i> Animations
+            </button>
+            <button id="change-speed" class="control-btn">
+                <i class="fas fa-tachometer-alt"></i> Speed: Normal
+            </button>
+            <button id="toggle-units" class="control-btn">
+                <i class="fas fa-exchange-alt"></i> Switch to °F
+            </button>
+            <div class="wind-control">
+                <label for="wind-slider">Wind speed:</label>
+                <input type="range" id="wind-slider" min="0" max="50" value="25" class="slider">
+                <span id="wind-value">25 km/h</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
