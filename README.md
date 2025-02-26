@@ -1,7 +1,7 @@
 # Know Your Weather
 
 ## 🌦️ Overview
-The Weather Dashboard is a dynamic and interactive web application that displays weather information with engaging animations. Users can:
+Know Your Weather is a dynamic and interactive web application that displays weather information with engaging animations. Users can:
 - Toggle animations on and off.
 - Adjust the animation speed.
 - Switch temperature units between Celsius and Fahrenheit.
