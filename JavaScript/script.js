@@ -1,146 +1,140 @@
 // DOM elements
-const toggleAnimationsBtn = document.getElementById('toggle-animations');
-const changeSpeedBtn = document.getElementById('change-speed');
-const toggleUnitsBtn = document.getElementById('toggle-units');
-const windSlider = document.getElementById('wind-slider');
-const windValue = document.getElementById('wind-value');
-const windSpeed = document.querySelector('.wind-speed');
-const filterButtons = document.querySelectorAll('.filter-btn');
-const weatherCards = document.querySelectorAll('.weather-card');
+const toggleAnimationsBtn = document.getElementById("toggle-animations");
+const changeSpeedBtn = document.getElementById("change-speed");
+const toggleUnitsBtn = document.getElementById("toggle-units");
+const windSlider = document.getElementById("wind-slider");
+const windValue = document.getElementById("wind-value");
+const windSpeed = document.querySelector(".wind-speed");
+const filterButtons = document.querySelectorAll(".filter-btn");
+const weatherCards = document.querySelectorAll(".weather-card");
 
 // State variables
 let animationsActive = true;
 let isSpeedFast = false;
 let isCelsius = true;
-let activeCard = null;
 
 // Initialize the page
-initializePage();
-
-function initializePage() {
-    // Set up event listeners
-    toggleAnimationsBtn.addEventListener('click', toggleAnimations);
-    changeSpeedBtn.addEventListener('click', changeSpeed);
-    toggleUnitsBtn.addEventListener('click', toggleUnits);
-    windSlider.addEventListener('input', updateWindSpeed);
-    
-    // Set up filter buttons
-    filterButtons.forEach(button => {
-        button.addEventListener('click', filterWeather);
-    });
-    
-    // Make cards interactive
-    weatherCards.forEach(card => {
-        card.addEventListener('click', expandCard);
-        
-        // Add subtle hover effect for icons
-        const icon = card.querySelector('.icon');
-        card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            const x = (e.clientX - rect.left) / rect.width - 0.5;
-            const y = (e.clientY - rect.top) / rect.height - 0.5;
-            
-            icon.style.transform = `translate(${x * 10}px, ${y * 10}px) scale(1.1)`;
-        });
-        
-        card.addEventListener('mouseleave', () => {
-            icon.style.transform = 'translate(0, 0) scale(1)';
-        });
-    });
-    
-    // Start all animations by default
-    document.body.classList.remove('animations-paused');
-    
-    // Add a subtle color pulse to each weather card
+document.addEventListener("DOMContentLoaded", () => {
+    setupEventListeners();
+    document.body.classList.remove("animations-paused");
     addColorPulse();
-    
-    // Apply random weather details every minute to make it feel dynamic
     setInterval(randomizeWeatherDetails, 60000);
+});
+
+function setupEventListeners() {
+    toggleAnimationsBtn.addEventListener("click", toggleAnimations);
+    changeSpeedBtn.addEventListener("click", changeSpeed);
+    toggleUnitsBtn.addEventListener("click", toggleUnits);
+    windSlider.addEventListener("input", updateWindSpeed);
+
+    filterButtons.forEach(button => button.addEventListener("click", filterWeather));
+    weatherCards.forEach(card => setupCardInteractions(card));
 }
 
-// Toggle animations on/off
+// Toggle animations
 function toggleAnimations() {
     animationsActive = !animationsActive;
-    document.body.classList.toggle('animations-paused', !animationsActive);
-    
-    // Update button text
-    toggleAnimationsBtn.innerHTML = animationsActive 
-        ? '<i class="fas fa-pause"></i> Animations' 
-        : '<i class="fas fa-play"></i> Animations';
-    
-    // Toggle active class
-    toggleAnimationsBtn.classList.toggle('active', animationsActive);
+    document.body.classList.toggle("animations-paused", !animationsActive);
+    toggleAnimationsBtn.innerHTML = animationsActive
+        ? `<i class="fas fa-pause"></i> Animations`
+        : `<i class="fas fa-play"></i> Animations`;
 }
 
 // Change animation speed
 function changeSpeed() {
     isSpeedFast = !isSpeedFast;
-    
-    // Get all animation elements
-    const rainAnimation = document.querySelector('.rain-animation');
-    const snowAnimation = document.querySelector('.snow-animation');
-    const windAnimation = document.querySelector('.wind-animation');
-    const sunAnimation = document.querySelector('.sun-animation');
-    const cloudAnimation = document.querySelector('.cloud-animation');
-    
-    // Update animation speeds
-    if (isSpeedFast) {
-        rainAnimation.style.animationDuration = '0.5s';
-        snowAnimation.style.animationDuration = '1.5s';
-        windAnimation.style.animationDuration = '0.75s';
-        sunAnimation.style.animationDuration = '1s';
-        cloudAnimation.style.animationDuration = '4s';
-        changeSpeedBtn.innerHTML = '<i class="fas fa-tachometer-alt"></i> Speed: Fast';
-    } else {
-        rainAnimation.style.animationDuration = '1s';
-        snowAnimation.style.animationDuration = '3s';
-        windAnimation.style.animationDuration = '1.5s';
-        sunAnimation.style.animationDuration = '2s';
-        cloudAnimation.style.animationDuration = '8s';
-        changeSpeedBtn.innerHTML = '<i class="fas fa-tachometer-alt"></i> Speed: Normal';
-    }
+    const speedSettings = isSpeedFast
+        ? { rain: "0.5s", snow: "1.5s", wind: "0.75s", sun: "1s", cloud: "4s" }
+        : { rain: "1s", snow: "3s", wind: "1.5s", sun: "2s", cloud: "8s" };
+
+    applyAnimationSpeed(speedSettings);
+    changeSpeedBtn.innerHTML = `<i class="fas fa-tachometer-alt"></i> Speed: ${isSpeedFast ? "Fast" : "Normal"}`;
 }
 
-// Toggle temperature units between Celsius and Fahrenheit
+function applyAnimationSpeed(speeds) {
+    document.querySelector(".rain-animation").style.animationDuration = speeds.rain;
+    document.querySelector(".snow-animation").style.animationDuration = speeds.snow;
+    document.querySelector(".wind-animation").style.animationDuration = speeds.wind;
+    document.querySelector(".sun-animation").style.animationDuration = speeds.sun;
+    document.querySelector(".cloud-animation").style.animationDuration = speeds.cloud;
+}
+
+// Toggle temperature units
 function toggleUnits() {
     isCelsius = !isCelsius;
-    
-    // Update all temperature displays
     weatherCards.forEach(card => {
-        const tempElement = card.querySelector('.temp');
+        const tempElement = card.querySelector(".temp");
         const currentTemp = parseFloat(card.dataset.temp);
-        
-        let displayTemp;
-        if (isCelsius) {
-            // Convert from F to C
-            displayTemp = currentTemp;
-            tempElement.innerHTML = `${displayTemp}°<span class="unit">C</span>`;
-        } else {
-            // Convert from C to F
-            displayTemp = Math.round((currentTemp * 9/5) + 32);
-            tempElement.innerHTML = `${displayTemp}°<span class="unit">F</span>`;
-        }
+        const displayTemp = isCelsius
+            ? currentTemp
+            : Math.round((currentTemp * 9) / 5 + 32);
+
+        tempElement.innerHTML = `${displayTemp}°<span class="unit">${isCelsius ? "C" : "F"}</span>`;
     });
-    
-    // Update button text
-    toggleUnitsBtn.innerHTML = isCelsius 
-        ? '<i class="fas fa-exchange-alt"></i> Switch to °F' 
-        : '<i class="fas fa-exchange-alt"></i> Switch to °C';
+
+    toggleUnitsBtn.innerHTML = `<i class="fas fa-exchange-alt"></i> Switch to °${isCelsius ? "F" : "C"}`;
 }
 
-// Update wind speed based on slider
+// Update wind speed
 function updateWindSpeed() {
     const speed = windSlider.value;
     windValue.textContent = `${speed} km/h`;
     windSpeed.textContent = speed;
-    
-    // Adjust wind animation based on speed
-    const windAnimation = document.querySelector('.wind-animation');
-    const animationDuration = isSpeedFast ? 2 - (speed / 50) : 3 - (speed / 25);
+
+    const windAnimation = document.querySelector(".wind-animation");
+    const animationDuration = isSpeedFast ? 2 - speed / 50 : 3 - speed / 25;
     windAnimation.style.animationDuration = `${Math.max(0.2, animationDuration)}s`;
 }
 
-// Filter weather cards by type
-function filterWeather() {
-    // Update active filter button
-    filterButtons.forEach(btn => btn.classList.remove('active'));
+// Setup weather card interactions
+function setupCardInteractions(card) {
+    card.addEventListener("click", expandCard);
+
+    const icon = card.querySelector(".icon");
+    card.addEventListener("mousemove", e => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        icon.style.transform = `translate(${x * 10}px, ${y * 10}px) scale(1.1)`;
+    });
+
+    card.addEventListener("mouseleave", () => {
+        icon.style.transform = "translate(0, 0) scale(1)";
+    });
+}
+
+// Filter weather cards
+function filterWeather(event) {
+    const filterType = event.target.dataset.filter; // Get the filter type from the button
+    filterButtons.forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+
+    weatherCards.forEach(card => {
+        const temp = parseFloat(card.dataset.temp);
+
+        // Determine the visibility based on filter
+        let shouldDisplay = false;
+        if (filterType === "all") {
+            shouldDisplay = true;
+        } else if (filterType === "warm" && temp > 20) {
+            shouldDisplay = true;
+        } else if (filterType === "cold" && temp <= 20) {
+            shouldDisplay = true;
+        }
+
+        card.style.display = shouldDisplay ? "block" : "none";
+    });
+}
+
+// Dummy function placeholders
+function addColorPulse() {
+    console.log("Adding color pulse effect...");
+}
+
+function randomizeWeatherDetails() {
+    console.log("Randomizing weather details...");
+}
+
+function expandCard() {
+    console.log("Expanding weather card...");
+}
