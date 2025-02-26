@@ -1,6 +1,4 @@
-# Weather-project
-
-# Weather Dashboard
+# Know Your Weather
 
 ## 🌦️ Overview
 The Weather Dashboard is a dynamic and interactive web application that displays weather information with engaging animations. Users can:
