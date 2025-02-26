@@ -12,6 +12,7 @@ const weatherCards = document.querySelectorAll('.weather-card');
 let animationsActive = true;
 let isSpeedFast = false;
 let isCelsius = true;
+let activeCard = null;
 
 // Initialize the page
 initializePage();
@@ -31,10 +32,30 @@ function initializePage() {
     // Make cards interactive
     weatherCards.forEach(card => {
         card.addEventListener('click', expandCard);
+        
+        // Add subtle hover effect for icons
+        const icon = card.querySelector('.icon');
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            
+            icon.style.transform = `translate(${x * 10}px, ${y * 10}px) scale(1.1)`;
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            icon.style.transform = 'translate(0, 0) scale(1)';
+        });
     });
     
     // Start all animations by default
     document.body.classList.remove('animations-paused');
+    
+    // Add a subtle color pulse to each weather card
+    addColorPulse();
+    
+    // Apply random weather details every minute to make it feel dynamic
+    setInterval(randomizeWeatherDetails, 60000);
 }
 
 // Toggle animations on/off
@@ -102,7 +123,9 @@ function toggleUnits() {
     });
     
     // Update button text
-    toggleUnitsBtn.textContent = isCelsius ? 'Switch to °F' : 'Switch to °C';
+    toggleUnitsBtn.innerHTML = isCelsius 
+        ? '<i class="fas fa-exchange-alt"></i> Switch to °F' 
+        : '<i class="fas fa-exchange-alt"></i> Switch to °C';
 }
 
 // Update wind speed based on slider
@@ -121,49 +144,3 @@ function updateWindSpeed() {
 function filterWeather() {
     // Update active filter button
     filterButtons.forEach(btn => btn.classList.remove('active'));
-    this.classList.add('active');
-    
-    const filter = this.dataset.filter;
-    
-    // Show/hide cards based on filter
-    weatherCards.forEach(card => {
-        if (filter === 'all') {
-            card.classList.remove('hidden');
-        } else if (filter === 'warm' && card.dataset.type === 'warm') {
-            card.classList.remove('hidden');
-        } else if (filter === 'cold' && card.dataset.type === 'cold') {
-            card.classList.remove('hidden');
-        } else {
-            card.classList.add('hidden');
-        }
-    });
-}
-
-// Expand card on click (toggle expanded state)
-function expandCard() {
-    const isExpanded = this.classList.contains('expanded');
-    
-    // First reset all cards
-    weatherCards.forEach(card => {
-        card.classList.remove('expanded');
-        card.style.transform = '';
-    });
-    
-    // If the card wasn't expanded, expand it
-    if (!isExpanded) {
-        this.classList.add('expanded');
-        this.style.transform = 'scale(1.05)';
-    }
-}
-
-// Add some dynamism with auto-cycling animations
-setInterval(() => {
-    if (animationsActive) {
-        // Randomly adjust cloud and sun animations for more natural movement
-        document.querySelector('.cloud-animation').style.animationDuration = 
-            `${5 + Math.random() * 5}s`;
-            
-        document.querySelector('.sun-animation').style.animationDuration = 
-            `${1.5 + Math.random()}s`;
-    }
-}, 8000);
